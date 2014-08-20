@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Stats2</string>
+    <string name="connected">USB Connected</string>
+    <string name="disconnected">USB Disconnected</string>
+    <string name="stop">Stop</string>
+</resources>

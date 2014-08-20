@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Open Caption</string>
+    <string name="voice_prompt">Talk to me</string>
+    <string name="voice_trigger">open caption</string>
+    <string name="location_found">Location Found!</string>
+</resources>
