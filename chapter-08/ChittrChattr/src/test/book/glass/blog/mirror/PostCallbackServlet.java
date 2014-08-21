@@ -12,7 +12,7 @@ import test.book.glass.blog.BlogHelper;
 import test.book.glass.blog.models.User;
 
 import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson.JacksonFactory;
+import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.mirror.Mirror;
 import com.google.api.services.mirror.model.Contact;
 import com.google.api.services.mirror.model.Notification;

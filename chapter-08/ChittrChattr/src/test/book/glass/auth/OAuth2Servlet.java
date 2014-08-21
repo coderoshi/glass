@@ -18,13 +18,13 @@ import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.auth.oauth2.TokenResponse;
 import com.google.api.client.extensions.appengine.http.UrlFetchTransport;
 import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
-import com.google.api.client.json.jackson.JacksonFactory;
+import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.mirror.Mirror;
 import com.google.api.services.mirror.model.Command;
 import com.google.api.services.mirror.model.Contact;
 import com.google.api.services.mirror.model.Subscription;
 import com.google.api.services.oauth2.Oauth2;
-import com.google.api.services.oauth2.model.Userinfo;
+import com.google.api.services.oauth2.model.Userinfoplus;
 
 /**
  * URL endpoint which handles all oauth requests.
@@ -91,7 +91,7 @@ public class OAuth2Servlet extends HttpServlet
       .setApplicationName("blog")
       .build();
 
-      Userinfo userinfo = service.userinfo().get().execute();
+      Userinfoplus userinfo = service.userinfo().get().execute();
 
       String email = userinfo.getEmail();
       String name = userinfo.getName();
@@ -175,6 +175,6 @@ public class OAuth2Servlet extends HttpServlet
   private String getUserId( GoogleTokenResponse tokenRes )
       throws IOException
   {
-    return tokenRes.parseIdToken().getPayload().getUserId();
+    return tokenRes.parseIdToken().getPayload().getSubject();
   }
 }
