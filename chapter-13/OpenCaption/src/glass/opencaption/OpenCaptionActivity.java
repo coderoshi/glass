@@ -65,12 +65,11 @@ public class OpenCaptionActivity
       // Create a card with spokenText
       Card card = new Card( this )
         .setText( spokenText );
+      card.getView();
 
       // display the card. when tapped it goes away.
       // http://stackoverflow.com/questions/8701634/send-email-intent
       // http://stackoverflow.com/questions/22004590/gdk-send-email-with-attachment
-
-      timelineManager.insert( card );
     }
     finish();
   }
@@ -97,7 +96,7 @@ public class OpenCaptionActivity
         // END:results
         card.setFootnote( getLocationMessage() );
         // START:results
-        timelineManager.insert( card );
+        card.getView();
       }
 
       // Close the speech prompt

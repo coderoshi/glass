@@ -5,6 +5,7 @@
 .mtj.tmp/
 appengine-generated/*
 appengine-generated
+bin/
 
 # Package Files #
 # *.jar
