@@ -13,7 +13,7 @@ import test.book.glass.MirrorUtils;
 
 import com.google.api.client.http.InputStreamContent;
 import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson.JacksonFactory;
+import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.mirror.Mirror;
 import com.google.api.services.mirror.Mirror.Locations;
 import com.google.api.services.mirror.Mirror.Timeline;
