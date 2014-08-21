@@ -1,4 +1,3 @@
 <resources>
-    <style name="AppTheme" parent="@android:style/Theme.DeviceDefault">
-    </style>
+  <style name="AppTheme" parent="@android:style/Theme.DeviceDefault" />
 </resources>
