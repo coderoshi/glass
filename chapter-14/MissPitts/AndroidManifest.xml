@@ -22,18 +22,18 @@
            android:screenOrientation="landscape"
            android:immersive="true"
            android:name=".GameActivity">
+<!--
             <intent-filter>
               <action android:name="android.intent.action.MAIN" />
               <category android:name="android.intent.category.LAUNCHER" />
            </intent-filter>
-<!--
+ -->
            <intent-filter>
               <action android:name="com.google.android.glass.action.VOICE_TRIGGER" />
            </intent-filter>
            <meta-data
                 android:name="com.google.android.glass.VoiceTrigger"
                 android:resource="@xml/voice_trigger" />
- -->
         </activity>
     </application>
 </manifest>
