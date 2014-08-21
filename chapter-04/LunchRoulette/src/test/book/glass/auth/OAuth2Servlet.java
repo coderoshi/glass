@@ -101,6 +101,6 @@ public class OAuth2Servlet extends HttpServlet
   private String getUserId( GoogleTokenResponse tokenRes )
       throws IOException
   {
-    return tokenRes.parseIdToken().getPayload().getUserId();
+    return tokenRes.parseIdToken().getPayload().getSubject();
   }
 }
