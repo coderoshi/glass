@@ -3,6 +3,8 @@
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
+appengine-generated/*
+appengine-generated
 
 # Package Files #
 # *.jar
