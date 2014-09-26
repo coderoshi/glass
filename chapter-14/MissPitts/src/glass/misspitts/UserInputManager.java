@@ -42,13 +42,8 @@ public class UserInputManager
   public synchronized List<GameEvent> getEvents() {
     events.clear();
     events.addAll( eventsBuffer );
-//    if( !eventsBuffer.isEmpty() ) {
-//      List<GameEvent> events = Collections.unmodifiableList( eventsBuffer );
-      eventsBuffer.clear();
-      return events;
-//    } else {
-//      return Collections.emptyList();
-//    }
+    eventsBuffer.clear();
+    return events;
   }
   public boolean dispatchGenericFocusedEvent( MotionEvent event ) {
     return gestureDetector != null && gestureDetector.onMotionEvent(event);
@@ -57,9 +52,9 @@ public class UserInputManager
   public boolean onGesture( Gesture gesture ) {
     switch( gesture ) {
     case TAP:
-      eventsBuffer.add( GameEvent.JUMP );   return true;
+      eventsBuffer.add( GameEvent.JUMP );         return true;
     case TWO_TAP:
-      eventsBuffer.add( GameEvent.JUMP_HIGHER );   return true;
+      eventsBuffer.add( GameEvent.JUMP_HIGHER );  return true;
     case THREE_TAP:
       eventsBuffer.add( GameEvent.JUMP_HIGHEST ); return true;
     default:

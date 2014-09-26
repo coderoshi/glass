@@ -14,29 +14,25 @@ import android.speech.RecognizerIntent;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.google.android.glass.app.Card;
-
 /**
  * @author Eric Redmond
  * @twitter coderoshi
  */
-// START:locationChanged
 public class OpenCaptionActivity
   extends Activity
   implements LocationListener
 {
-  // ...other code...
-//END:locationChanged
   private static final String TAG = OpenCaptionActivity.class.getName();
-
+  private StringBuilder messageText;
   private LocationManager locationManager;
-  private String locationMessage = null;
+  private String locationMessage;
 
   @Override
   // START:startSpeechPrompt
   // START:locations
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    messageText = new StringBuilder();
     // END:startSpeechPrompt
     setupLocationManager();
     // START:startSpeechPrompt
@@ -58,18 +54,12 @@ public class OpenCaptionActivity
     Log.d(TAG, "onResume");
     // START:prompt
     super.onResume();
+    messageText = new StringBuilder();
     List<String> results =
         getIntent().getStringArrayListExtra( RecognizerIntent.EXTRA_RESULTS );
-    if( results.isEmpty() ) {
-      String spokenText = results.get(0);
-      // Create a card with spokenText
-      Card card = new Card( this )
-        .setText( spokenText );
-      card.getView();
-
-      // display the card. when tapped it goes away.
-      // http://stackoverflow.com/questions/8701634/send-email-intent
-      // http://stackoverflow.com/questions/22004590/gdk-send-email-with-attachment
+    if( !results.isEmpty() ) {
+      // save the spoken text, we'll do something with it later
+      messageText.append( results.get(0) );
     }
     finish();
   }
@@ -87,21 +77,10 @@ public class OpenCaptionActivity
       List<String> results =
           intent.getStringArrayListExtra( RecognizerIntent.EXTRA_RESULTS );
       if( !results.isEmpty() ) {
-        String spokenText = results.get(0);
-
-        // TODO: save data to disk, or send to google drive!?
-        // Create a card with spokenText
-        Card card = new Card( this )
-            .setText( spokenText );
-        // END:results
-        card.setFootnote( getLocationMessage() );
-        // START:results
-        card.getView();
+        // save the spoken text, we'll do something with it later
+        messageText.append( results.get(0) );
+        messageText.append( "\n" );
       }
-
-      // Close the speech prompt
-      stopService( intent );
-
       // run recognizer again, increment the next request code
       startSpeechPrompt( ++requestCode );
     } else if( resultCode == RESULT_CANCELED ) {
@@ -111,6 +90,20 @@ public class OpenCaptionActivity
     super.onActivityResult(requestCode, resultCode, intent);
   }
   // END:results
+  // START:emailMessage
+  // START:emailMessageLoc
+  protected void onPause() {
+    super.onPause();
+    // email the spoken text to the Glass owner
+    // END:emailMessage
+    messageText.append( "\nLocation: " );
+    messageText.append( getLocationMessage() );
+    // START:emailMessage
+    new EmailWebServiceTask(this).execute( messageText.toString() );
+    messageText.setLength(0);
+  }
+  // END:emailMessage
+  // END:emailMessageLoc
 
   private synchronized void setLocationMessage(String locMsg) {
     this.locationMessage = locMsg;
@@ -120,7 +113,7 @@ public class OpenCaptionActivity
     if( this.locationMessage != null ) {
       return this.locationMessage;
     } else {
-      return "unknown location";
+      return "unknown";
     }
   }
 
