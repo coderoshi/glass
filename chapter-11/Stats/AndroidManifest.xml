@@ -6,8 +6,7 @@
 
   <uses-sdk
     android:minSdkVersion="19"
-    android:targetSdkVersion="19"
-    tools:ignore="OldTargetApi" />
+    android:targetSdkVersion="19" />
 
   <uses-permission
     android:name="com.google.android.glass.permission.DEVELOPMENT" />
@@ -31,7 +30,8 @@
       android:icon="@drawable/ic_gear_50"
       android:label="@string/app_name"
       android:enabled="true"
-      android:exported="false">
+      android:exported="true"
+      tools:ignore="ExportedService">
       <intent-filter>
         <action android:name="com.google.android.glass.action.VOICE_TRIGGER" />
       </intent-filter>

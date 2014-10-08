@@ -24,7 +24,7 @@ public class QRCameraView
     implements DirectRenderingCallback
 {
   public final static String TAG = QRCameraView.class.getName();
-  public static final int   FPS = 30;
+  public static final int    FPS = 30;
 
   private Camera camera;
 
@@ -86,7 +86,6 @@ public class QRCameraView
       params.setPreviewFpsRange(FPS * 1000, FPS * 1000);
       final DisplayMetrics dm = getContext().getResources().getDisplayMetrics();
       params.setPreviewSize(dm.widthPixels, dm.heightPixels); // 640, 360
-      // params.setFocusMode(Camera.Parameters.FOCUS_MODE_EDOF);
       camera.setParameters(params);
       camera.setPreviewDisplay(holder);
       QRCameraActivity activity = (QRCameraActivity)getContext();
@@ -107,8 +106,7 @@ public class QRCameraView
     if (this.camera != null) {
       try {
         this.camera.setPreviewDisplay(null);
-      } catch (IOException e) {
-      }
+      } catch (IOException e) {}
       this.camera.setPreviewCallback(null);
       this.camera.stopPreview();
       this.camera.release();

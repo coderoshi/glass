@@ -27,7 +27,10 @@
             android:launchMode="singleTop"
             android:immersive="true">
              <intent-filter>
-                 <action android:name="com.google.android.glass.action.VOICE_TRIGGER" />
+                 <action android:name="android.intent.action.MAIN" />
+                 <category android:name="android.intent.category.LAUNCHER" />
+
+                 <!-- <action android:name="com.google.android.glass.action.VOICE_TRIGGER" /> -->
              </intent-filter>
              <meta-data
                 android:name="com.google.android.glass.VoiceTrigger"

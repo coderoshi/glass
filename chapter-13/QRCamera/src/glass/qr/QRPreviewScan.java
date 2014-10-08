@@ -20,11 +20,11 @@ public class QRPreviewScan implements Camera.PreviewCallback {
   private int                widthPixels;
   private int                heightPixels;
   private MultiFormatReader  multiFormatReader;
-  private QRCameraActivity   context;
+  private QRCameraActivity   activity;
 
-  public QRPreviewScan(QRCameraActivity context, int widthPixels, int heightPixels) {
+  public QRPreviewScan(QRCameraActivity activity, int widthPixels, int heightPixels) {
     this.framesSinceLastScan = 0;
-    this.context = context;
+    this.activity = activity;
     this.widthPixels = widthPixels;
     this.heightPixels = heightPixels;
     this.multiFormatReader = new MultiFormatReader();
@@ -57,7 +57,7 @@ public class QRPreviewScan implements Camera.PreviewCallback {
     }
     if (result != null) {
       Intent intent = new QRIntentBuilder(result.getText()).buildIntent();
-      context.launchIntent(intent);
+      activity.launchIntent(intent);
     }
   }
   // END:scan
