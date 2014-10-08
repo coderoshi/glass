@@ -8,18 +8,18 @@
         android:id="@+id/left_column"
         android:layout_width="@dimen/glass_card_column_width"
         android:layout_height="@dimen/glass_card_body_height"
-        android:layout_marginLeft="@dimen/glass_card_margin"
+        android:layout_marginStart="@dimen/glass_card_margin"
         android:layout_marginTop="@dimen/glass_card_margin"
-         >
+        >
 
         <ProgressBar
             android:id="@+id/battery_level"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
-            android:layout_below="@+id/imageView1"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@+id/img_battery"
             android:max="100"
             android:paddingTop="5dp"
             android:progress="100"
@@ -30,25 +30,26 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:text="30V" />
+            android:layout_alignParentStart="true"
+            android:text="@string/battery_voltage" />
 
         <TextView
             android:id="@+id/battery_degrees"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_toRightOf="@+id/battery_voltage"
-            android:gravity="right"
-            android:text="40˚C" />
+            android:layout_alignParentEnd="true"
+            android:layout_toEndOf="@+id/battery_voltage"
+            android:gravity="end"
+            android:text="@string/battery_degrees" />
 
         <ImageView
-            android:id="@+id/imageView1"
+            android:id="@+id/img_battery"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
+            android:contentDescription="@string/img_battery"
             android:src="@drawable/img_battery" />
         
     </RelativeLayout>
@@ -57,11 +58,11 @@
         android:id="@+id/right_column"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/glass_card_body_height"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
-        android:layout_marginRight="@dimen/glass_card_margin"
+        android:layout_marginEnd="@dimen/glass_card_margin"
         android:layout_marginTop="@dimen/glass_card_margin"
-        android:layout_toRightOf="@+id/left_column"
+        android:layout_toStartOf="@+id/left_column"
         tools:ignore="UselessLeaf" >
 
         <TextView
@@ -74,7 +75,7 @@
             android:gravity="center"
             android:ellipsize="end"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="English" />
+            android:text="@string/language" />
 
         <TextView
             android:id="@+id/country"
@@ -85,7 +86,7 @@
             android:gravity="center"
             android:ellipsize="end"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="USA" />
+            android:text="@string/country" />
 
         <TextView
             android:id="@+id/time"
@@ -95,7 +96,7 @@
             android:layout_marginTop="19dp"
             android:gravity="center"
             android:singleLine="true"
-            android:text="00:00" />
+            android:text="@string/time" />
         
     </RelativeLayout>
 
@@ -103,12 +104,12 @@
          android:id="@+id/footer_container"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
-         android:layout_alignLeft="@+id/left_column"
+         android:layout_alignStart="@+id/left_column"
          android:layout_alignParentBottom="true"
-         android:layout_alignParentRight="true"
-         android:layout_gravity="bottom|left"
+         android:layout_alignParentEnd="true"
+         android:layout_gravity="bottom|start"
          android:layout_marginBottom="@dimen/glass_card_footer_margin"
-         android:layout_marginRight="@dimen/glass_card_margin"
+         android:layout_marginStart="@dimen/glass_card_margin"
          android:layout_toEndOf="@+id/left_column"
          android:orientation="horizontal" >
 
@@ -125,14 +126,15 @@
         <ImageView
             android:id="@+id/wifi_strength"
             android:layout_width="wrap_content"
-            android:layout_height="40px"
-            android:contentDescription="Wifi Strength"
+            android:layout_height="40dp"
+            android:contentDescription="@string/wifi_strength"
             android:src="@drawable/ic_wifi_1" />
 
         <ImageView
             android:id="@+id/stats_icon_view"
             android:layout_width="wrap_content"
-            android:layout_height="40px"
+            android:layout_height="40dp"
+            android:contentDescription="@string/stats_icon_view"
             android:src="@drawable/ic_gear_50" />
 
     </LinearLayout>

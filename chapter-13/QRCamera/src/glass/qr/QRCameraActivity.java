@@ -17,13 +17,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 
-import com.google.android.glass.app.Card;
+import com.google.android.glass.widget.CardBuilder;
+import com.google.android.glass.widget.CardBuilder.Layout;
 
 /**
  * @author eric redmond
  * @twitter coderoshi
  */
-public class QRCameraActivity extends Activity
+public class QRCameraActivity
+  extends Activity
 {
   public final static String TAG = QRCameraActivity.class.getName();
 
@@ -35,7 +37,7 @@ public class QRCameraActivity extends Activity
   private AudioManager       audioManager;
 
   // START:overlay
-  class OverlayView extends View {
+  static class OverlayView extends View {
     private Paint paint;
     private String overlay;
     public OverlayView(Context context) {
@@ -74,15 +76,13 @@ public class QRCameraActivity extends Activity
     // START:create
     super.onCreate(savedInstanceState);
     audioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
-
-    cameraView = new QRCameraView(this);
-    overlayView = new OverlayView(this);
-    layout = new FrameLayout(this);
-    layout.setKeepScreenOn(true);
-    layout.addView(cameraView);  // order is important here
-    layout.addView(overlayView); // the last view is on top
-
-    setContentView(layout);
+    cameraView = new QRCameraView( this );
+    overlayView = new OverlayView( this );
+    layout = new FrameLayout( this );
+    layout.setKeepScreenOn( true );
+    layout.addView( cameraView );  // order is important here
+    layout.addView( overlayView ); // the last view is on top
+    setContentView( layout );
   }
   // END:create
 
@@ -159,7 +159,8 @@ public class QRCameraActivity extends Activity
     cameraView.renderingPaused(cameraView.getHolder(), true);
     if (intent.hasExtra("text")) {
       // no intent to launch, just show the text
-      Card card = new Card(this).setText(intent.getStringExtra("text"));
+      CardBuilder card = new CardBuilder(this, Layout.TEXT)
+        .setText(intent.getStringExtra("text"));
       layout.removeAllViews();
       layout.addView( card.getView() );
     } else {

@@ -101,4 +101,8 @@ public class StatsService extends Service
   public IBinder onBind(Intent intent) {
     return null;
   }
+
+  LiveCard getLiveCard() {
+    return liveCard;
+  }
 }
