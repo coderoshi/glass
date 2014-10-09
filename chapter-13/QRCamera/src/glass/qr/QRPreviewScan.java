@@ -40,15 +40,48 @@ public class QRPreviewScan implements Camera.PreviewCallback {
   }
   //END:preview
 
+  /*
+  // START:async
+  private static AtomicBoolean scanning = new AtomicBoolean(false);
+  class ScanTask extends AsyncTask<PlanarYUVLuminanceSource, Result, Result> {
+    @Override
+    protected Result doInBackground( PlanarYUVLuminanceSource... params ) {
+      if( scanning.getAndSet(true) ) return null;
+      PlanarYUVLuminanceSource luminanceSource = params[0];
+      BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(luminanceSource));
+      try {
+        return multiFormatReader.decodeWithState(bitmap);
+      } catch (ReaderException re) { // nothing found to decode
+      } finally {
+        multiFormatReader.reset();
+      }
+      scanning.set(false);
+      return null;
+    }
+    @Override
+    protected void onPostExecute(Result result) {
+      if( result != null ) {
+        Intent intent = new QRIntentBuilder(result.getText()).buildIntent();
+        activity.launchIntent(intent);
+        scanning.set(false);
+      }
+    }
+  }
+  // END:async
+  //*/
+
   // START:scan
   private void scan(byte[] data, int width, int height) {
     // END:scan
     Log.d(TAG, "scan");
     // START:scan
-    Result result = null;
     PlanarYUVLuminanceSource luminanceSource = new PlanarYUVLuminanceSource(data,
         width, height, 0, 0, width, height, false);
+    // END:scan
+    // new ScanTask().execute(luminanceSource); // uncomment to use ScanTask
+    // START:scan
     BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(luminanceSource));
+    Result result = null;
     try {
       result = multiFormatReader.decodeWithState(bitmap);
     } catch (ReaderException re) { // nothing found to decode

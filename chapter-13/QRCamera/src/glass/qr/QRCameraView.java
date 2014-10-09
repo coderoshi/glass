@@ -20,8 +20,8 @@ import com.google.android.glass.timeline.DirectRenderingCallback;
 @SuppressLint("ViewConstructor")
 // START:cameraView
 public class QRCameraView
-    extends SurfaceView
-    implements DirectRenderingCallback
+  extends SurfaceView
+  implements DirectRenderingCallback
 {
   public final static String TAG = QRCameraView.class.getName();
   public static final int    FPS = 30;

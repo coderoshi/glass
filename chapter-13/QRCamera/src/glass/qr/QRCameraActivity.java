@@ -152,7 +152,7 @@ public class QRCameraActivity
   // END:menu
   
   // START:launchIntent
-  public void launchIntent(Intent intent) {
+  public synchronized void launchIntent(Intent intent) {
     // END:launchIntent
     Log.d(TAG, "launchIntent");
     // START:launchIntent

@@ -26,14 +26,14 @@ public class QRCameraActivityTest
 // START:layout
   public void testContentLayout() {
     // Get the activity's content view
-    FrameLayout contentView = (FrameLayout)activity.findViewById( android.R.id.content );
-    FrameLayout frameLayout = (FrameLayout)contentView.getChildAt(0);
+    FrameLayout cv = (FrameLayout)activity.findViewById( android.R.id.content );
+    FrameLayout frameLayout = (FrameLayout)cv.getChildAt(0);
     // Get the QRCameraView and overlay
     assertEquals( 2, frameLayout.getChildCount() );
     assertTrue( frameLayout.getChildAt(0) instanceof QRCameraView );
     assertTrue( frameLayout.getChildAt(1) instanceof QRCameraActivity.OverlayView );
     // test that QRCameraView is displayed on the screen
-    ViewAsserts.assertOnScreen( contentView, frameLayout.getChildAt(0) );
+    ViewAsserts.assertOnScreen( cv, frameLayout.getChildAt(0) );
   }
 // END:layout
 }
