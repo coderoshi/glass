@@ -11,6 +11,7 @@ import android.content.res.Configuration;
 import android.net.wifi.WifiManager;
 import android.os.BatteryManager;
 import android.provider.Settings;
+import android.util.Log;
 
 public final class StatsUtil
 {
@@ -48,6 +49,7 @@ public final class StatsUtil
     // EXTRA_SCALE gives EXTRA_LEVEL a maximum battery level
     int scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, 100);
     float level = (float)intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0) / scale;
+    Log.d("StatsUtil", "power: " + (int)level * 100);
     return (int)level * 100;
   }
   // END:level

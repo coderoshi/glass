@@ -68,6 +68,7 @@ public class StatsService extends Service
     rv.setTextViewText(R.id.language, config.locale.getDisplayLanguage());
     rv.setTextViewText(R.id.country, config.locale.getDisplayCountry());
     // END:buildviews
+    rv.setProgressBar(R.id.battery_level, 100, 100, false);
     }
     // START:buildviews
     return rv;

@@ -38,7 +38,9 @@ public class MenuActivity extends Activity
         public void onServiceConnected(ComponentName name, IBinder binder) {
           if (binder instanceof PartyService.GifferBinder) {
             service = ((PartyService.GifferBinder) binder).getService();
-            openOptionsMenu();
+            if( hasWindowFocus() ) {
+              openOptionsMenu();
+            }
           }
           unbindService(this);
         }

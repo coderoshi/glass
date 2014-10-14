@@ -62,7 +62,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginEnd="@dimen/glass_card_margin"
         android:layout_marginTop="@dimen/glass_card_margin"
-        android:layout_toStartOf="@+id/left_column"
+        android:layout_toEndOf="@+id/left_column"
         tools:ignore="UselessLeaf" >
 
         <TextView
