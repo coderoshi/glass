@@ -1,4 +1,4 @@
-package app.notoriety;
+package app.notoriety.helpers;
 
 /**
  * A convenience logger that always logs to this package space.

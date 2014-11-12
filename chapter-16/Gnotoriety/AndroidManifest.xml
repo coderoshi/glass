@@ -2,26 +2,37 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="glass.notoriety"
     android:versionCode="1"
-    android:versionName="1.0" >
+    android:versionName="1.0" xmlns:tools="http://schemas.android.com/tools">
 
     <uses-sdk
         android:minSdkVersion="19"
-        android:targetSdkVersion="19" />
+        android:targetSdkVersion="19"
+        tools:ignore="OldTargetApi" />
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/ic_logo_simple"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:immersive="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="com.google.android.glass.action.VOICE_TRIGGER" />
+            </intent-filter>
+            <meta-data
+                android:name="com.google.android.glass.VoiceTrigger"
+                android:resource="@xml/voice_trigger" />
         </activity>
+        <provider
+            android:name="app.notoriety.providers.NotesProvider" 
+            android:authorities="app.notoriety.providers"
+            android:exported="false">
+        </provider>
     </application>
-
 </manifest>
