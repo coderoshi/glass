@@ -86,14 +86,18 @@ public class NoteList
     return notesMap;
   }
 
+  // START:addNote
   public void addNote( Note note ) {
+    Uri insertUri = Uri.parse("content://app.notoriety.providers/notes");
     Uri newNote = mContext.getContentResolver()
-        .insert(NotesProvider.CONTENT_URI, noteToContentValue(note));
+        .insert(insertUri, noteToContentValue(note));
     List<String> segments = newNote.getPathSegments();
-    String noteId = segments.get(1);
-    note.setId( noteId );
+    note.setId( segments.get(1) );
+    // END:addNote
     Log.d("New note ID: %s", note.getId());
+    // START:addNote
   }
+  // END:addNote
 
   public void updateNote( String id, String body ) {
     Log.d("Update note ID: %s", id );
@@ -128,6 +132,8 @@ public class NoteList
    * @param note
    * @return
    */
+  // START:addNote
+
   private ContentValues noteToContentValue( Note note ) {
     ContentValues noteVals = new ContentValues();
     noteVals.put( "body", note.getBody() );
@@ -136,4 +142,5 @@ public class NoteList
     noteVals.put( "longitude", note.getLongitude() );
     return noteVals;
   }
+  // END:addNote
 }

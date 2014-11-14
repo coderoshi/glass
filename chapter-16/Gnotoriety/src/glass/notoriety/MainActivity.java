@@ -14,13 +14,13 @@ import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
+import android.speech.tts.TextToSpeech;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.AdapterView;
 import app.notoriety.models.Note;
 import app.notoriety.models.NoteList;
 
@@ -35,19 +35,23 @@ import com.google.android.glass.widget.CardScrollView;
 
 public class MainActivity
   extends Activity
-  implements GestureDetector.BaseListener, LocationListener
+  implements GestureDetector.BaseListener,
+             TextToSpeech.OnInitListener,
+             LocationListener
 {
   private static final int SPEECH_REQ_CODE = 101;
 
   private GestureDetector    mGestureDetector;
   private AudioManager       mAudioManager;
+  private TextToSpeech       mTTS;
   private LocationManager    mLocationManager;
   private CardScrollView     mScrollView;
   private NotesScrollAdapter mAdapter;
   private NoteList           mNotes;
   private Location           mCurrentLocation;
   private List<CardBuilder>  mCards;
-  private boolean            mEmptyCardsList;
+  private boolean            mEmptyCardsList = true;
+  private boolean            mTTSInit;
 
   class NotesScrollAdapter
     extends CardScrollAdapter
@@ -79,23 +83,52 @@ public class MainActivity
   }
 
   @Override
+  // START:onCreate
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    // END:onCreate
     getWindow().requestFeature( WindowUtils.FEATURE_VOICE_COMMANDS );
-    mGestureDetector = new GestureDetector(this).setBaseListener(this);
-    mAudioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
-    mLocationManager = setupLocationManager();
-    mNotes = new NoteList(this);
+    // START:onCreate
+    setupManagers();
+    mNotes = new NoteList( this );
     mCards = new ArrayList<>();
     for( Note note : mNotes ) {
       addNoteCardToAdapter( note );
     }
+    // END:onCreate
     if( mEmptyCardsList ) {
       mCards.add( new CardBuilder(this, Layout.TEXT).setText("[tap to add a note]") );
     }
+    // START:onCreate
     mAdapter = new NotesScrollAdapter();
-    mScrollView = createCardScrollView( mGestureDetector, mAudioManager );
+    mAdapter.notifyDataSetChanged();
+    mScrollView = new CardScrollView( this );
+    mScrollView.setAdapter( mAdapter );
+    mScrollView.setHorizontalScrollBarEnabled( true );
+    mScrollView.activate();
     setContentView( mScrollView );
+  }
+  // END:onCreate
+
+  // START:setupManagers
+  private void setupManagers() {
+    mGestureDetector = new GestureDetector(this).setBaseListener(this);
+    mTTS = new TextToSpeech(this, this);
+    mLocationManager = setupLocationManager();
+    mAudioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+  }
+  // END:setupManagers
+
+  @Override
+  protected void onDestroy() {
+    super.onDestroy();
+    if( mTTS != null ) {
+      mTTS.stop();
+      mTTS.shutdown();
+    }
+    if( mLocationManager != null ) {
+      mLocationManager.removeUpdates( this );
+    }
   }
 
   private void addNoteCardToAdapter( Note note ) {
@@ -108,80 +141,75 @@ public class MainActivity
     mCards.add( cb );
   }
 
-  private CardScrollView createCardScrollView(final GestureDetector gd,
-                                              final AudioManager am)
-  {
-    CardScrollView scrollView = new CardScrollView(this) {
-      @Override
-      public boolean dispatchGenericFocusedEvent( MotionEvent event ) {
-        if( gd.onMotionEvent( event )) return true;
-        return super.dispatchGenericFocusedEvent( event );
-      }
-    };
-    scrollView.setAdapter( mAdapter );
-    scrollView.setHorizontalScrollBarEnabled( true );
-    scrollView.setOnItemClickListener( new AdapterView.OnItemClickListener() {
-      @Override
-      public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        am.playSoundEffect( Sounds.TAP );
-      }
-    } );
-    return scrollView;
-  }
-
   @Override
+  // START:onCreatePanelMenu
   public boolean onCreatePanelMenu(int featureId, Menu menu) {
-    if( featureId == WindowUtils.FEATURE_VOICE_COMMANDS ) {
+    if( featureId == WindowUtils.FEATURE_VOICE_COMMANDS ||
+        featureId == Window.FEATURE_OPTIONS_PANEL ) {
       getMenuInflater().inflate( R.menu.main, menu );
+      return true;
     }
-    // Pass through to super to setup touch menu.
-    return super.onCreatePanelMenu(featureId, menu);
+    return false;
   }
+  // END:onCreatePanelMenu
 
   @Override
-  public boolean onCreateOptionsMenu(Menu menu) {
-    getMenuInflater().inflate(R.menu.main, menu);
-    return true;
-  }
-
-  @Override
+  // START:newNote
   public boolean onMenuItemSelected( int featureId, MenuItem item ) {
     if( featureId == WindowUtils.FEATURE_VOICE_COMMANDS ||
         featureId == Window.FEATURE_OPTIONS_PANEL ) {
-      int selectedNotePos = mScrollView.getSelectedItemPosition();
-      Note currentNote = null;
-      // HACK: poor man's note position retrieval, better to keep track
-      int pos = 0;
-      for( Note note : mNotes.allNotes().values() ) {
-        if( selectedNotePos < pos++ ) continue;
-        currentNote = note;
-        break;
-      }
-
+      Note currentNote = getSelectedNote();
       switch( item.getItemId() ) {
       case R.id.action_new_note:
-        startSpeechPrompt();
+        Intent intent = new Intent( RecognizerIntent.ACTION_RECOGNIZE_SPEECH );
+        startActivityForResult( intent, SPEECH_REQ_CODE );
+        return true;
+        // END:newNote
+        // START:readNote
+      case R.id.action_read_note:
+        if( mTTSInit && currentNote != null ) {
+          mTTS.speak(currentNote.getBody(), TextToSpeech.QUEUE_FLUSH, null);
+        }
+        // END:readNote
         return true;
       case R.id.action_delete_note:
         if( currentNote != null ) {
+          int selectedNotePos = mScrollView.getSelectedItemPosition();
           mNotes.deleteNote( currentNote.getId() );
           mCards.remove( selectedNotePos );
           mAdapter.notifyDataSetChanged();
         }
         return true;
+        // START:actionMap
       case R.id.action_map:
+        // END:actionMap
         if( currentNote != null ) {
-          String nav = String.format("google.navigation:ll=%s,%s&mode=mru",
+          // START:actionMap
+          String nav = String.format("google.navigation:ll=%s,%s",
               currentNote.getLatitude(), currentNote.getLongitude() );
           Intent mapIntent = new Intent( Intent.ACTION_VIEW, Uri.parse(nav) );
           startActivity( mapIntent );
+          // END:actionMap
         }
         return true;
+        // START:newNote
       }
     }
     return super.onMenuItemSelected(featureId, item);
   }
+  // END:newNote
 
+  private Note getSelectedNote() {
+    int selectedNotePos = mScrollView.getSelectedItemPosition();
+    // HACK: poor man's note position retrieval, better to keep track
+    int pos = 0;
+    for( Note note : mNotes.allNotes().values() ) {
+      if( selectedNotePos > pos++ ) continue;
+      return note;
+    }
+    return null;
+  }
+  
   @Override
   public boolean onGenericMotionEvent(MotionEvent event) {
     return mGestureDetector.onMotionEvent(event);
@@ -199,16 +227,16 @@ public class MainActivity
     }
   }
 
-  protected void onActivityResult(int requestCode, int resultCode,
-                                  Intent intent)
+  // START:newNote
+
+  protected void onActivityResult(int requestCode, int resultCode, Intent data)
   {
-    if( resultCode == RESULT_OK && resultCode == SPEECH_REQ_CODE ) {
+    if( resultCode == RESULT_OK && requestCode == SPEECH_REQ_CODE ) {
       List<String> results =
-          intent.getStringArrayListExtra( RecognizerIntent.EXTRA_RESULTS );
+          data.getStringArrayListExtra( RecognizerIntent.EXTRA_RESULTS );
       if( !results.isEmpty() ) {
         String body = results.get( 0 );
-        Note note = new Note()
-          .setBody( body );
+        Note note = new Note().setBody( body );
         if( mCurrentLocation != null ) {
           note.setLatitude( mCurrentLocation.getLatitude() );
           note.setLongitude( mCurrentLocation.getLongitude() );
@@ -218,23 +246,18 @@ public class MainActivity
         mAdapter.notifyDataSetChanged();
       }
     }
-    super.onActivityResult(requestCode, resultCode, intent);
   }
-
-  private void startSpeechPrompt() {
-    Intent intent = new Intent( RecognizerIntent.ACTION_RECOGNIZE_SPEECH );
-    startActivityForResult( intent, SPEECH_REQ_CODE );
-  }
+  // END:newNote
 
   private LocationManager setupLocationManager() {
-    LocationManager locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+    mLocationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
     Criteria criteria = new Criteria();
     criteria.setAccuracy( Criteria.ACCURACY_COARSE );
     List<String> providers = mLocationManager.getProviders(criteria, true);
     for( String provider : providers ) {
-      locationManager.requestLocationUpdates(provider, 15*1000, 100, this);
+      mLocationManager.requestLocationUpdates(provider, 15*1000, 100, this);
     }
-    return locationManager;
+    return mLocationManager;
   }
 
   @Override
@@ -249,5 +272,10 @@ public class MainActivity
   @Override
   public void onLocationChanged(Location location) {
     mCurrentLocation = location;
+  }
+
+  @Override
+  public void onInit( int status ) {
+    mTTSInit = mTTSInit || status == TextToSpeech.SUCCESS;
   }
 }

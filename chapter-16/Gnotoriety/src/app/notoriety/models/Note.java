@@ -4,12 +4,14 @@ import java.io.Serializable;
 import java.util.Date;
 
 @SuppressWarnings("serial")
+// START:note
 public class Note implements Serializable {
-  private String id;
-  private String body;
-  private Date createdAt;
-  private double latitude;
-  private double longitude;
+  String id;
+  String body;
+  Date createdAt;
+  double latitude;
+  double longitude;
+// END:note
 
   public Note() {
     createdAt = new Date();
@@ -55,4 +57,6 @@ public class Note implements Serializable {
   public String toString() {
     return getTitle();
   }
+// START:note
 }
+// END:note
