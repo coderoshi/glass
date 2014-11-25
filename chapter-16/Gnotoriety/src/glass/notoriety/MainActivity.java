@@ -154,7 +154,7 @@ public class MainActivity
   // END:onCreatePanelMenu
 
   @Override
-  // START:newNote
+  // START:newNote1
   public boolean onMenuItemSelected( int featureId, MenuItem item ) {
     if( featureId == WindowUtils.FEATURE_VOICE_COMMANDS ||
         featureId == Window.FEATURE_OPTIONS_PANEL ) {
@@ -163,41 +163,46 @@ public class MainActivity
       case R.id.action_new_note:
         Intent intent = new Intent( RecognizerIntent.ACTION_RECOGNIZE_SPEECH );
         startActivityForResult( intent, SPEECH_REQ_CODE );
-        return true;
-        // END:newNote
+        break;
+      // ... other menu action cases...
+        // END:newNote1
         // START:readNote
       case R.id.action_read_note:
         if( mTTSInit && currentNote != null ) {
           mTTS.speak(currentNote.getBody(), TextToSpeech.QUEUE_FLUSH, null);
         }
+        break;
         // END:readNote
-        return true;
+      // START:delete
       case R.id.action_delete_note:
+        // END:delete
         if( currentNote != null ) {
-          int selectedNotePos = mScrollView.getSelectedItemPosition();
-          mNotes.deleteNote( currentNote.getId() );
-          mCards.remove( selectedNotePos );
-          mAdapter.notifyDataSetChanged();
+        // START:delete
+        int selectedNotePos = mScrollView.getSelectedItemPosition();
+        mNotes.deleteNote( currentNote.getId() );
+        mCards.remove( selectedNotePos );
+        mAdapter.notifyDataSetChanged();
+        // END:delete
         }
-        return true;
+        break;
         // START:actionMap
       case R.id.action_map:
         // END:actionMap
         if( currentNote != null ) {
-          // START:actionMap
-          String nav = String.format("google.navigation:ll=%s,%s",
-              currentNote.getLatitude(), currentNote.getLongitude() );
-          Intent mapIntent = new Intent( Intent.ACTION_VIEW, Uri.parse(nav) );
-          startActivity( mapIntent );
-          // END:actionMap
+        // START:actionMap
+        String nav = String.format("google.navigation:ll=%s,%s",
+            currentNote.getLatitude(), currentNote.getLongitude() );
+        Intent mapIntent = new Intent( Intent.ACTION_VIEW, Uri.parse(nav) );
+        startActivity( mapIntent );
+        // END:actionMap
         }
-        return true;
-        // START:newNote
+        break;
+        // START:newNote1
       }
     }
     return super.onMenuItemSelected(featureId, item);
   }
-  // END:newNote
+  // END:newNote1
 
   private Note getSelectedNote() {
     int selectedNotePos = mScrollView.getSelectedItemPosition();
@@ -227,10 +232,8 @@ public class MainActivity
     }
   }
 
-  // START:newNote
-
-  protected void onActivityResult(int requestCode, int resultCode, Intent data)
-  {
+  // START:newNote2
+  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     if( resultCode == RESULT_OK && requestCode == SPEECH_REQ_CODE ) {
       List<String> results =
           data.getStringArrayListExtra( RecognizerIntent.EXTRA_RESULTS );
@@ -247,7 +250,7 @@ public class MainActivity
       }
     }
   }
-  // END:newNote
+  // END:newNote2
 
   private LocationManager setupLocationManager() {
     mLocationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
