@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="glass.simple" >
+
+    <uses-sdk
+        android:minSdkVersion="19"
+        android:targetSdkVersion="19" />
+
+    <uses-permission
+        android:name="com.google.android.glass.permission.DEVELOPMENT" />
+
+    <!-- START:provider -->
+    <uses-permission android:name="android.permission.READ_CALENDAR" />
+    <uses-permission android:name="android.permission.WRITE_CALENDAR" />
+    <!-- END:provider -->
+
+    <!-- START:application -->
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <!-- END:application -->
+
+        <!-- START:activity -->
+        <activity
+            android:name=".SimpleActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <!-- END:activity -->
+        <!-- START:service -->
+        <service
+            android:name=".SimpleService"
+            android:label="@string/app_name"
+            android:clearTaskOnLaunch="true"
+            android:launchMode="singleInstance"
+            android:enabled="true" >
+        </service>
+        <!-- END:service -->
+        <!-- START:receiver -->
+        <receiver
+            android:name=".SimpleReceiver" >
+            <intent-filter>
+                <action
+                    android:name="android.intent.action.ACTION_POWER_CONNECTED" />
+                <action
+                    android:name="android.intent.action.ACTION_POWER_DISCONNECTED"/>
+            </intent-filter>
+        </receiver>
+        <!-- END:receiver -->
+    </application>
+</manifest>
