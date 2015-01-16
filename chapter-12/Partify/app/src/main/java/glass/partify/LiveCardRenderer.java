@@ -53,10 +53,10 @@ public class LiveCardRenderer implements DirectRenderingCallback {
             // END:drawframe
             while( true ) {
                 try {
-                    // START:drawframe
-                    join();
-                    // END:drawframe
-                    break;
+                // START:drawframe
+            join();
+                // END:drawframe
+                break;
                 } catch (InterruptedException e) {}
             }
             // START:drawframe
