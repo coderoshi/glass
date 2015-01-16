@@ -1,0 +1,15 @@
+<resources>
+    <!-- Default screen margins, per the Glass design guidelines. -->
+    <dimen name="card_margin">40px</dimen>
+
+    <!-- The recommended margin between the bottom of the card and the footer. This is
+         an adjusted value so that the baseline of the text in the footer sits 40px
+         from the bottom of the card, matching the other margins. -->
+    <dimen name="card_footer_margin">33px</dimen>
+
+    <!-- The maximum height of the body content inside a card. -->
+    <dimen name="card_body_height">240px</dimen>
+
+    <!-- The width of the columns in this two-column layout. -->
+    <dimen name="card_column_width">280px</dimen>
+</resources>
