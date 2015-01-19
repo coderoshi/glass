@@ -157,11 +157,12 @@ public class MainActivity
     // START:newNote1
     public boolean onMenuItemSelected( int featureId, MenuItem item ) {
         if( featureId == WindowUtils.FEATURE_VOICE_COMMANDS ||
-                featureId == Window.FEATURE_OPTIONS_PANEL ) {
+            featureId == Window.FEATURE_OPTIONS_PANEL ) {
             Note currentNote = getSelectedNote();
             switch( item.getItemId() ) {
                 case R.id.action_new_note:
-                    Intent intent = new Intent( RecognizerIntent.ACTION_RECOGNIZE_SPEECH );
+                    Intent intent =
+                            new Intent( RecognizerIntent.ACTION_RECOGNIZE_SPEECH );
                     startActivityForResult( intent, SPEECH_REQ_CODE );
                     break;
                 // ... other menu action cases...
